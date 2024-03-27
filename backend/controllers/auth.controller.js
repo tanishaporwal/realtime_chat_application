@@ -30,12 +30,13 @@ export const signup= async(req, res)=>{
     //hash password
     const encryptPassword= await bcrypt.hash(password, 10);
     
-  
+    const profilePic =`https://avatar.iran.liara.run/public/`;
     const user= await User.create({
         fullName,
         email,
         password:encryptPassword,
         contactNumber,
+        image:profilePic
     
     })
     if (user) {
@@ -47,8 +48,9 @@ export const signup= async(req, res)=>{
             _id: user._id,
             fullName: user.fullName,
             email: user.email,
-            message:"successfully account created"
-            // profilePic: newUser.profilePic,
+            message:"successfully account created",
+            image:user.profilePic
+           
         });
     } else {
         res.status(400).json({ error: "Invalid user data" });
@@ -74,20 +76,22 @@ export const login= async(req, res)=>{
         }
         
         const checkUser= await User.findOne({email});
-        if(!checkUser){
+        
+        const isPasswordCorrect=await bcrypt.compare(password, checkUser?.password || "")
+        if(!checkUser || !isPasswordCorrect){
             return res.status(400).json({
                 success:false,
-                message:"Account doesn't exist"
+                message:"Invalid username or password"
             })
         }
-        const isPasswordCorrect=await bcrypt.compare(password, checkUser.password)
         generateTokenAndSetCookie(checkUser._id, res);
        
         res.status(200).json({
 			_id: checkUser._id,
 			fullName: checkUser.fullName,
 			email: checkUser.email,
-			// profilePic: user.profilePic,
+            image:checkUser.profilePic
+			
 		});
            
         

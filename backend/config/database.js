@@ -1,7 +1,5 @@
 import mongoose from "mongoose";
-import dotenv from "dotenv";
 
-dotenv.config();
 
 const connect =async () =>{
     try{
@@ -12,8 +10,7 @@ const connect =async () =>{
     // .then(()=>console.log("DB connect Successfully"))
     catch(error){
         console.log("DB connection failed");
-        console.log(error);
-        process.exit(1);
+        console.log(error.message);
     }
 }
 

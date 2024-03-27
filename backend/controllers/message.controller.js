@@ -1,5 +1,7 @@
 import Message from "../models/message.model.js";
 import Conversation from "../models/conversation.model.js"
+import { getReceiverSocketId, io } from "../socket/socket.js";
+
 export const sendMessage = async(req, res) => {
  try{
     const {message}= req.body;
@@ -7,7 +9,7 @@ export const sendMessage = async(req, res) => {
     const senderId= req.user._id;
    let conversation= await Conversation.findOne({
       participants:{$all: [senderId, receiverId]}
-   })
+   });
 
    
 
@@ -28,22 +30,23 @@ export const sendMessage = async(req, res) => {
 
    //socket io function
 
-
    // await conversation.save();
    // await newMessage.save();
 
    //run in parallel
    await Promise.all([conversation.save(), newMessage.save()]);
+   const receiverSocketId = getReceiverSocketId(receiverId);
+   if(receiverSocketId){
+      io.to(receiverSocketId).emit("newMessage", newMessage)
+   }
 
    res.status(201).json(
       newMessage
    )
  }
  catch(error){
-    console.log(error)
+    console.log(error.message)
     return res.status(500).json({
-        
-        success:false,
         error:"Internal server error"
     })
  }
@@ -57,15 +60,16 @@ export const getMessage= async(req, res)=>{
       const conversation = await Conversation.findOne({
             participants:{$all: [senderId, userToChatId]},
       }).populate("messages")
-      if(!conversation) return res.status(200).json([]);
+      if(!conversation) 
+      return res.status(200).json([]);
       const messages= conversation.messages;
+
       res.status(200).json(messages);
 
    }
    catch(error){
       console.log(error.message);
       res.status(500).json({
-         success:false,
          message:"Internal server error"
       })
 
