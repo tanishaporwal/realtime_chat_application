@@ -15,11 +15,11 @@ const Conversation = ({conversation, lastIdx,emoji}) => {
     onClick={()=>setSelectedConversation(conversation)}>
     <div className={`avatar ${isOnline ? "online":""}`}>
   <div className="w-12 rounded-full">
-    <img src={conversation.image} />
+    <img src="https://daisyui.com/images/stock/photo-1534528741775-53994a69daeb.jpg" />
   </div>
 </div>
     <div className='flex flex-col flex-1'>
-        <div className='flex gap-3 justify-between'>
+        <div className='flex gap-2 justify-between'>
             <p className='font-bold text-gray-200'>{conversation.fullName}
             </p>
             <span className='text-xl'>{emoji}</span>
@@ -29,9 +29,9 @@ const Conversation = ({conversation, lastIdx,emoji}) => {
 
 {!lastIdx && <div className='divider my-0 py-0 h-1'/>}
 {/* <div className="avatar offline">
-  <div className="w-24 rounded-full">
-    <img src="https://daisyui.com/images/stock/photo-1534528741775-53994a69daeb.jpg" />
-  </div>
+<div className="w-24 rounded-full">
+<img src="https://daisyui.com/images/stock/photo-1534528741775-53994a69daeb.jpg" />
+</div>
 </div> */}
     
     </>

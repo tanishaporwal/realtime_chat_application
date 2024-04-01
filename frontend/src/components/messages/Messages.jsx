@@ -1,4 +1,4 @@
-import React,{useEffect, useRef} from 'react'
+import {useEffect, useRef} from 'react'
 import Message from './Message'
 import useGetMessages from '../../hooks/useGetMessages'
 import MessageSkeleton from '../skeletons/MessageSkeleton';
@@ -22,7 +22,7 @@ const Messages = () => {
       ))}
         {loading &&  [...Array(3)].map((_,idx)=><MessageSkeleton key={idx}/>)}    
         {!loading && messages.length === 0 && (
-          <p className='text-center text-black'>Send a message</p>
+          <p className='text-center text-black border-[#0077b6]'>Send a message</p>
         )}
     </div>
   )
